@@ -1,3 +1,93 @@
+/* Styles for the fullscreen loading overlay and spinner animation */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-primary);
+    z-index: 9999;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.loading-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-spinner div {
+    position: absolute;
+    border: 4px solid var(--primary);
+    opacity: 1;
+    border-radius: 50%;
+    animation: loading-spinner 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.loading-spinner div:nth-child(2) {
+    animation-delay: -0.75s;
+    border-color: var(--secondary);
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+@keyframes loading-spinner {
+    0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    4.9% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    5% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+    }
+}
+
 :root {
     --bg-primary-ok: oklch(8% 0.02 260); --bg-primary: #10101f;
     --bg-surface-ok: oklch(12% 0.04 260); --bg-surface: #1a1a2e;
@@ -30,7 +120,7 @@
     --animation-pulse: 1.8s ease-in-out infinite;
     --z-base: 1; --z-controls: 10; --z-overlay: 50; --z-dropdown: 100; --z-fixed: 900; --z-toast: 1000;
     
-    /* Plyr player theme variables */
+    /* CSS variables customizing the appearance of the Plyr media player */
     --plyr-color-main: var(--primary);
     --plyr-video-background: var(--bg-primary);
     --plyr-video-control-color: var(--text);
@@ -101,18 +191,24 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font: inherit; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-primary); 
-    color: var(--text); 
+    background-color: var(--bg-primary);
+    color: var(--text);
     line-height: 1.6;
-    min-height: 100vh; 
+    min-height: 100vh;
+    -webkit-transition: background-color var(--transition-smooth), color var(--transition-smooth);
     transition: background-color var(--transition-smooth), color var(--transition-smooth);
-    display: flex; 
-    flex-direction: column; 
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
     padding: var(--space-md);
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
@@ -133,12 +229,34 @@ a:hover, a:focus-visible { text-decoration: underline; color: var(--primary-hove
 #file-name { font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 var(--space-xs); min-height: 1.2em; }
 .file-meta { font-size: 0.9rem; color: var (--text-secondary); display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-sm); }
 
-.controls-section { display: flex; gap: var(--space-md); max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
+.controls-section { display: flex; gap: var(--space-sm); max-width: 900px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+
+.controls-section > * {
+  flex: 1 1 160px;
+  display: flex;
+}
+
+.controls-section button {
+  width: 100%;
+}
 .action-button { flex: 1 1 160px; padding: var(--space-md) var(--space-sm); border-radius: var(--radius-md); border: none; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: background-color var(--transition-fast), color var(--transition-fast); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; text-align: center; min-height: 50px; white-space: nowrap; }
 .action-button:hover, .action-button:focus-visible { background: var(--bg-surface); outline: 2px solid var(--primary); outline-offset: 2px;}
 .secondary-button { background: var(--bg-surface-2); color: var(--text); }
 
-.dropdown-container { position: relative; flex: 1 1 160px; display: flex; }
+.dropdown-container {
+    position: relative;
+    flex: 1 1 160px;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+
+.dropdown-container > button {
+    width: 100%;
+}
+
+.stream-btn { width: 100%; }
 .dropdown-menu { position: absolute; bottom: calc(100% + 10px); left: 0; width: 100%; min-width: 260px; background: var(--bg-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); padding: var(--space-sm); z-index: var(--z-dropdown); opacity: 0; visibility: hidden; transform: translateY(10px); transform-origin: bottom left; transition: opacity var(--transition-fast), visibility var(--transition-fast), transform var(--transition-fast); border: 1px solid var(--border); max-height: 60vh; overflow-y: auto; }
 .dropdown-container.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
 .dropdown-item { padding: var(--space-sm); border-radius: var(--radius-sm); display: flex; align-items: center; gap: var(--space-sm); color: var(--text); text-decoration: none; cursor: pointer; position: relative; min-height: 44px; border-block-end: 1px solid var(--border); }
@@ -154,6 +272,16 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
 
 .toast { position: fixed; bottom: var(--space-lg); right: var(--space-lg); background: var(--bg-surface); border-radius: var(--radius-md); padding: var(--space-md); box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: var(--space-sm); transform: translateY(calc(100% + var(--space-lg))); opacity: 0; visibility: hidden; transition: transform var(--transition-smooth), opacity var(--transition-smooth); z-index: var(--z-toast); max-width: 380px; border-inline-start: 4px solid var(--secondary); }
 .toast.show { transform: translateY(0); opacity: 1; visibility: visible; }
+
+.toast {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.toast.hide {
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+}
 .toast-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
 .toast-message { flex: 1; font-size: 0.95rem; line-height: 1.4; font-weight: 500; }
 
@@ -191,13 +319,28 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
     animation: fadeIn var(--animation-fade) forwards, slideUp var(--animation-slide) forwards;
 }
 
+/* Aspect ratio fallback hack for browsers lacking native support */
+.player-container::before {
+    content: "";
+    display: block;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+}
+
+.player-container > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .player-container video {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-/* Plyr specific style overrides */
+/* Custom overrides to adjust Plyr media player default styles */
 .plyr {
     --plyr-audio-controls-background: var(--bg-surface-2);
     border-radius: var(--radius-md);
@@ -262,7 +405,7 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
     }
 }
 
-/* Stream menu specific styles */
+/* Styling for the stream selection and player options menu */
 .stream-menu-header {
     display: flex;
     justify-content: space-between;
@@ -385,7 +528,7 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
     white-space: nowrap;
 }
 
-/* Mobile responsive adjustments for stream menu */
+/* Responsive tweaks for stream menu layout on smaller screens */
 @media (max-width: 768px) {
     .dropdown-menu {
         max-height: 80vh;
@@ -422,7 +565,7 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
     }
 }
 
-/* Essential animations */
+/* Keyframe animations used throughout the interface */
 @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -465,7 +608,7 @@ footer a:hover { color: var(--primary-hover); text-decoration: underline; }
     50% { transform: translateY(-15px); }
 }
 
-/* Apply animations to elements */
+/* Animation assignments for UI components and transitions */
 .bg-gradient {
     background-size: 300% 100%;
     background-image: linear-gradient(135deg, 
@@ -548,7 +691,7 @@ footer {
     animation: fadeIn 1s ease-out 0.5s both;
 }
 
-/* Logo hover animation */
+/* Hover effects and animations for footer logo links */
 footer a {
     transition: transform var(--transition-fast), color var(--transition-fast);
 }
@@ -561,9 +704,9 @@ footer a:hover i {
     animation: bounce 1s infinite ease-in-out;
 }
 
-/* Toggle animation */
+/* Animations for the dark mode toggle button */
 .toggle-dark-mode {
-    transition: transform var(--transition-bounce), background var(--transition-fast);
+    transition: transform var(--transition-bounce), background var (--transition-fast);
 }
 
 .toggle-dark-mode:hover {
@@ -578,7 +721,7 @@ footer a:hover i {
     transform: rotate(360deg);
 }
 
-/* Track menu styles */
+/* Styling for the subtitle and audio track selection menu */
 .track-list {
     display: flex;
     flex-direction: column;
@@ -654,4 +797,22 @@ footer a:hover i {
     text-align: center;
     font-size: 0.9rem;
     font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .rotate-icon {
+    animation: rotateIcon 0.5s ease-in-out;
+  }
+  
+  @keyframes rotateIcon {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 }
